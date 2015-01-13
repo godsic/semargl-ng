@@ -23,7 +23,7 @@ ___
 
 comming soon...
 
-## Benefits:
+## benefits:
 
 - high performance
 - can process data that does not fit RAM
