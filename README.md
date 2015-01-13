@@ -4,7 +4,7 @@ ___
 
 ## usage:</h3>
 
-> #### calculating mode profiles (point-wise FFT):
+- #### calculating mode profiles (point-wise FFT):
 
 1. convert ovf data produced by either OOMMF of mumax3 to DUMP format, i.e. mumax3-convert -dump *.ovf
 2. t2wr2c *.dump - transform data from t(ime) to w(frequency) domain assuming r(eal) input and outputting c(omplex) data. The data is saved into two set of files, namely *.dump.X and *.dump.Y for amplitude and phase, respectively.
@@ -14,6 +14,6 @@ ___
 
 <hr>
 
-> #### calculating dispersion
+- #### calculating dispersion:
 
 comming soon...
