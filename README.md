@@ -2,6 +2,12 @@
 a set of CLI tools to perform spectral analysis of micromagnetics-specific data
 ___
 
+## how to build:
+assuming one has gcc, fftw, fftw-devel, fftw-libs-single installed:
+
+`cd semargl-ng; make all`
+___
+
 ## usage:
 
 #### calculating mode profiles (point-wise FFT):
@@ -17,7 +23,7 @@ ___
 
 comming soon...
 
-#### Benefits:
+## Benefits:
 
 - high performance
 - can process data that does not fit RAM
