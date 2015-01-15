@@ -316,7 +316,7 @@ void calculatebatch(size_t datasize, size_t stride, size_t *batches, size_t *off
     while (datasize % (*offset) != 0)
     {
         (*offset)--;
-    } 
+    }
     *batches = datasize / (*offset);
 
     printf("Availiable memory: %zd FLOATS\n", freememfloat);
@@ -324,4 +324,20 @@ void calculatebatch(size_t datasize, size_t stride, size_t *batches, size_t *off
 
     if ((*batches) * (*offset) != datasize)
         exit(EXIT_FAILURE);
+}
+
+void removegroundstate(float **in, size_t size, size_t offset, size_t n)
+{
+    float *out = *in;
+    float y0;
+    int i, k, bias;
+    for (k = 0; k < n; k++)
+    {
+        bias = k * offset;
+        y0 = out[bias];
+        for (i = 0; i < size; i++)
+        {
+            out[bias + i] = out[bias + i] - y0;
+        }
+    }
 }

@@ -109,6 +109,8 @@ int main(int argc, char *argv[])
         printf("\e[0;34mLOAD\n");
         if (loaddatar(t_count, stride, bias, offset, &buffer, &chunk_buffer, (const char **)filenames))
             exit(EXIT_FAILURE);
+        printf("\n\e[0;35mSUBTRACT GROUND STATE\n");
+        removegroundstate(&buffer, t_count, stride, offset / stride);
 
         printf("\n\e[0;31mFFT\n");
         fftwf_execute(plan);
