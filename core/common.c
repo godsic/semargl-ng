@@ -321,6 +321,45 @@ size_t savedatac(size_t count, size_t stride, size_t bias, size_t offset, fftwf_
 	return EXIT_SUCCESS;
 }
 
+size_t finalizefilesr2r(size_t count, dump *header, const char **filenames)
+{
+	FILE *f;
+	char *filename;
+	size_t i;
+	size_t extpos = 0;
+
+	for (i = 0; i < count; i++)
+	{
+		filename = (char *)calloc(strlen(filenames[i]) + strlen(XEXT) + 1, sizeof(char));
+
+		extpos = strlen(filenames[i]) - strlen(strstr(filenames[i], DUMPEXT));
+
+		strncpy(filename, filenames[i], extpos);
+
+		strcat(filename, UVWEXT);
+		strcat(filename, DUMPEXT);
+
+		printf("%s\n", filename);
+
+		f = fopen((const char *)filename, "r+b");
+		if (f == NULL)
+			return EXIT_FAILURE;
+
+		setvbuf(f, NULL, _IONBF, 0);
+
+		if (dfinilize(f, header))
+			return EXIT_FAILURE;
+
+		if (fclose(f))
+			return EXIT_FAILURE;
+
+		free((void *)filename);
+		f = NULL;
+		filename = NULL;
+	}
+	return EXIT_SUCCESS;
+}
+
 size_t finalizefilesr2c(size_t count, dump *header, const char **filenames)
 {
 	FILE *fx;
