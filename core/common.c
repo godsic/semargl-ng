@@ -9,6 +9,8 @@ size_t spawnfilesr2c(size_t count, const char **filenames)
 {
 	char *filenamex;
 	char *filenamey;
+	size_t extpos = 0;
+
 	FILE *fx;
 	FILE *fy;
 	size_t i;
@@ -17,10 +19,16 @@ size_t spawnfilesr2c(size_t count, const char **filenames)
 	{
 		filenamex = (char *)calloc(strlen(filenames[i]) + strlen(XEXT) + 1, sizeof(char));
 		filenamey = (char *)calloc(strlen(filenames[i]) + strlen(YEXT) + 1, sizeof(char));
-		strcpy(filenamex, filenames[i]);
-		strcpy(filenamey, filenames[i]);
+
+		extpos = strlen(filenames[i]) - strlen(strstr(filenames[i], DUMPEXT));
+
+		strncpy(filenamex, filenames[i], extpos);
+		strncpy(filenamey, filenames[i], extpos);
+
 		strcat(filenamex, XEXT);
 		strcat(filenamey, YEXT);
+		strcat(filenamex, DUMPEXT);
+		strcat(filenamey, DUMPEXT);
 
 		printf("%s\n", filenamex);
 		printf("%s\n", filenamey);
@@ -51,18 +59,30 @@ size_t spawnfilesc2c(size_t count, const char **filenamesX, const char **filenam
 {
 	char *filenamexx;
 	char *filenameyy;
+
+	size_t extposX = 0;
+	size_t extposY = 0;
+
 	FILE *fx;
 	FILE *fy;
+
 	size_t i;
 
 	for (i = 0; i < count; i++)
 	{
 		filenamexx = (char *)calloc(strlen(filenamesX[i]) + strlen(XEXT) + 1, sizeof(char));
 		filenameyy = (char *)calloc(strlen(filenamesY[i]) + strlen(YEXT) + 1, sizeof(char));
-		strcpy(filenamexx, filenamesX[i]);
-		strcpy(filenameyy, filenamesY[i]);
+
+		extposX = strlen(filenamesX[i]) - strlen(strstr(filenamesX[i], DUMPEXT));
+		extposY = strlen(filenamesY[i]) - strlen(strstr(filenamesY[i], DUMPEXT));
+
+		strncpy(filenamexx, filenamesX[i], extposX);
+		strncpy(filenameyy, filenamesY[i], extposY);
+
 		strcat(filenamexx, XEXT);
 		strcat(filenameyy, YEXT);
+		strcat(filenamexx, DUMPEXT);
+		strcat(filenameyy, DUMPEXT);
 
 		printf("%s\t%s\n", filenamexx, filenameyy);
 
@@ -186,6 +206,8 @@ size_t savedatac(size_t count, size_t stride, size_t bias, size_t offset, fftwf_
 	float x, y;
 	float xx, yy;
 	size_t i, k, ii;
+	size_t extpos = 0;
+
 	FILE *fx;
 	FILE *fy;
 	char *filenamex;
@@ -198,10 +220,16 @@ size_t savedatac(size_t count, size_t stride, size_t bias, size_t offset, fftwf_
 	{
 		filenamex = (char *)calloc(strlen(filenames[i]) + strlen(XEXT) + 1, sizeof(char));
 		filenamey = (char *)calloc(strlen(filenames[i]) + strlen(YEXT) + 1, sizeof(char));
-		strcpy(filenamex, filenames[i]);
-		strcpy(filenamey, filenames[i]);
+
+		extpos = strlen(filenames[i]) - strlen(strstr(filenames[i], DUMPEXT));
+
+		strncpy(filenamex, filenames[i], extpos);
+		strncpy(filenamey, filenames[i], extpos);
+
 		strcat(filenamex, XEXT);
 		strcat(filenamey, YEXT);
+		strcat(filenamex, DUMPEXT);
+		strcat(filenamey, DUMPEXT);
 
 		printf("%s\n", filenamex);
 		printf("%s\n", filenamey);
@@ -265,15 +293,22 @@ size_t finalizefilesr2c(size_t count, dump *header, const char **filenames)
 	char *filenamex;
 	char *filenamey;
 	size_t i;
+	size_t extpos = 0;
 
 	for (i = 0; i < count; i++)
 	{
 		filenamex = (char *)calloc(strlen(filenames[i]) + strlen(XEXT) + 1, sizeof(char));
 		filenamey = (char *)calloc(strlen(filenames[i]) + strlen(YEXT) + 1, sizeof(char));
-		strcpy(filenamex, filenames[i]);
-		strcpy(filenamey, filenames[i]);
+
+		extpos = strlen(filenames[i]) - strlen(strstr(filenames[i], DUMPEXT));
+
+		strncpy(filenamex, filenames[i], extpos);
+		strncpy(filenamey, filenames[i], extpos);
+
 		strcat(filenamex, XEXT);
 		strcat(filenamey, YEXT);
+		strcat(filenamex, DUMPEXT);
+		strcat(filenamey, DUMPEXT);
 
 		printf("%s\n", filenamex);
 		printf("%s\n", filenamey);
