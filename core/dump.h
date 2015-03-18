@@ -7,6 +7,7 @@
 #define MAGIC "#dump002"
 #define ALIGNTODOUBLE sizeof(double)
 #define CRCSIZE 8
+#define DUMPEXT ".dump"
 
 // 8 byte alighment
 struct DUMP {
