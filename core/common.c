@@ -15,7 +15,7 @@ size_t spawnfilesr2r(size_t count, const char **filenames)
 
 	for (i = 0; i < count; i++)
 	{
-		filename = (char *)calloc(strlen(filenames[i]) + strlen(XEXT) + 1, sizeof(char));
+		filename = (char *)calloc(strlen(filenames[i]) + strlen(UVWEXT) + 1, sizeof(char));
 
 		extpos = strlen(filenames[i]) - strlen(strstr(filenames[i], DUMPEXT));
 
@@ -144,6 +144,37 @@ size_t spawnfilesc2c(size_t count, const char **filenamesX, const char **filenam
 }
 
 
+size_t loadspatdatar(size_t count, size_t bias, size_t offset, float **gbuffer, const char **filenames)
+{
+	FILE *f;
+	float *gbf = *gbuffer;
+	float *gbf_offset;
+	size_t i, k, ii;
+
+	for (i = 0; i < count; i++)
+	{
+		ii = bias + i;
+		k = i * offset;
+		gbf_offset = &gbf[k];
+
+		printf("%s\n", filenames[ii]);
+
+		f = fopen((const char *)filenames[ii], "rb");
+		if (f == NULL)
+			return EXIT_FAILURE;
+
+		setvbuf(f, NULL, _IONBF, 0);
+
+		if (dloadchunkfloat(f, 0, offset, &gbf_offset))
+			return EXIT_FAILURE;
+
+		if (fclose(f))
+			return EXIT_FAILURE;
+		f = NULL;
+	}
+	return EXIT_SUCCESS;
+}
+
 size_t loaddatar(size_t count, size_t stride, size_t bias, size_t offset, float **gbuffer, float **lbuffer, const char **filenames)
 {
 	FILE *f;
@@ -249,7 +280,7 @@ size_t savedatar(size_t count, size_t stride, size_t bias, size_t offset, float 
 
 	for (i = 0; i < count; i++)
 	{
-		filename = (char *)calloc(strlen(filenames[i]) + strlen(XEXT) + 1, sizeof(char));
+		filename = (char *)calloc(strlen(filenames[i]) + strlen(UVWEXT) + 1, sizeof(char));
 
 		extpos = strlen(filenames[i]) - strlen(strstr(filenames[i], DUMPEXT));
 
@@ -379,7 +410,7 @@ size_t finalizefilesr2r(size_t count, dump *header, const char **filenames)
 
 	for (i = 0; i < count; i++)
 	{
-		filename = (char *)calloc(strlen(filenames[i]) + strlen(XEXT) + 1, sizeof(char));
+		filename = (char *)calloc(strlen(filenames[i]) + strlen(UVWEXT) + 1, sizeof(char));
 
 		extpos = strlen(filenames[i]) - strlen(strstr(filenames[i], DUMPEXT));
 

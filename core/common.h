@@ -29,6 +29,7 @@ size_t spawnfilesr2r(size_t count, const char **filenames);
 size_t spawnfilesr2c(size_t count, const char **filenames);
 size_t spawnfilesc2c(size_t count, const char **filenamesX, const char **filenamesY);
 
+size_t loadspatdatar(size_t count, size_t bias, size_t offset, float **gbuffer, const char **filenames);
 size_t loaddatar(size_t count, size_t stride, size_t bias, size_t offset, float **gbuffer, float **lbuffer, const char **filenames);
 size_t loaddatac(size_t count, size_t stride, size_t bias, size_t size, size_t offset, fftwf_complex **gbuffer, float **lbufferx, float **lbuffery, size_t mode, const char **filenamesX, const char **filenamesY);
 
