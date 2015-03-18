@@ -9,7 +9,7 @@
 #define CRCSIZE 8
 
 // 8 byte alighment
-struct DUMP{
+struct DUMP {
     alignas(ALIGNTODOUBLE) char magic[8]; // +0
     alignas(ALIGNTODOUBLE) int64_t components; // +8
     alignas(ALIGNTODOUBLE) int64_t meshSize[3]; // +16

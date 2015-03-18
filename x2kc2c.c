@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
 
     filenamesX = &argv[1];
-    filenamesY = &argv[1+t_count];
+    filenamesY = &argv[1 + t_count];
 
     setvbuf(stdout, NULL, _IONBF, 0);
 
@@ -123,18 +123,18 @@ int main(int argc, char *argv[])
         if (loaddatac(offset, stridecmpx, 0, stridecmpx, offset, &buffer_complex, &chunk_bufferx, &chunk_buffery, MODEXY, (const char **)&filenamesX[bias], (const char **)&filenamesY[bias]))
             exit(EXIT_FAILURE);
 
-    //     printf("\n\e[0;31mFFT\n");
-    //     fftwf_execute(plan);
+        //     printf("\n\e[0;31mFFT\n");
+        //     fftwf_execute(plan);
 
-    //     printf("\n\e[1;33mSTORE\n");
-    //     if (savedatac(stridecmpx, stridecmpx, bias, offset, &buffer_complex, &chunk_bufferx, &chunk_buffery, MODEAP, (const char **)filenames))
-    //         exit(EXIT_FAILURE);
+        //     printf("\n\e[1;33mSTORE\n");
+        //     if (savedatac(stridecmpx, stridecmpx, bias, offset, &buffer_complex, &chunk_bufferx, &chunk_buffery, MODEAP, (const char **)filenames))
+        //         exit(EXIT_FAILURE);
 
-    //     // finalize the files
-    //     printf("\n\e[0;32mFINALIZING\n");
-    //     if (finalizefilesr2c(stridecmpx, frame, (const char **)filenames))
-    //         exit(EXIT_FAILURE);
-    //     printf("\nDONE\n");
+        //     // finalize the files
+        //     printf("\n\e[0;32mFINALIZING\n");
+        //     if (finalizefilesr2c(stridecmpx, frame, (const char **)filenames))
+        //         exit(EXIT_FAILURE);
+        //     printf("\nDONE\n");
 
     }
 

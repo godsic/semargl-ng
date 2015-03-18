@@ -45,7 +45,6 @@ int main(int argc, char *argv[])
     size_t t_count = argc - 1;
     size_t c, bias = 0;
     size_t datasize;
-    // size_t datasizebyte;
     char **filenames = &argv[1];
     size_t batches;
     size_t offset;
@@ -83,10 +82,13 @@ int main(int argc, char *argv[])
 
     buffer = (float *)aligned_alloc(ALIGNETOCACHE, stride * offset * sizeof(float)); // 2 goes for padding required by fftw r2c
     memset(buffer, 0, stride * offset * sizeof(float));
-    buffer_complex = (fftwf_complex *)buffer;
+    buffer_complex = (fftwf_complex *)&buffer[0];
     chunk_buffer = (float *)aligned_alloc(ALIGNETOCACHE, sizeof(float) * offset);
     chunk_bufferx = (float *)aligned_alloc(ALIGNETOCACHE, sizeof(float) * offset);
     chunk_buffery = (float *)aligned_alloc(ALIGNETOCACHE, sizeof(float) * offset);
+
+    printf("in: %p\n", buffer);
+    printf("out: %p\n", buffer_complex);
 
     plan = fftwf_plan_many_dft_r2c(1, (const int *)&t_count, offset,
                                    buffer, NULL,
@@ -109,8 +111,12 @@ int main(int argc, char *argv[])
         printf("\e[0;34mLOAD\n");
         if (loaddatar(t_count, stride, bias, offset, &buffer, &chunk_buffer, (const char **)filenames))
             exit(EXIT_FAILURE);
+
         printf("\n\e[0;35mSUBTRACT GROUND STATE\n");
         removegroundstate(&buffer, t_count, stride, offset / stride);
+
+        printf("\n\e[0;35mAPPLYING HANNING WINDOW\n");
+        applywindow(&buffer, t_count, stride, offset / stride);
 
         printf("\n\e[0;31mFFT\n");
         fftwf_execute(plan);
