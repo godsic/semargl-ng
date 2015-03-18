@@ -25,6 +25,7 @@
 
 size_t getfreememphys();
 
+size_t spawnfilesr2r(size_t count, const char **filenames);
 size_t spawnfilesr2c(size_t count, const char **filenames);
 size_t spawnfilesc2c(size_t count, const char **filenamesX, const char **filenamesY);
 

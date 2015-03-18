@@ -5,6 +5,41 @@ size_t getfreememphys()
 	return (size_t)sysconf(_SC_PAGESIZE) * (size_t)sysconf(_SC_AVPHYS_PAGES);
 }
 
+size_t spawnfilesr2r(size_t count, const char **filenames)
+{
+	char *filename;
+	size_t extpos = 0;
+
+	FILE *f;
+	size_t i;
+
+	for (i = 0; i < count; i++)
+	{
+		filename = (char *)calloc(strlen(filenames[i]) + strlen(XEXT) + 1, sizeof(char));
+
+		extpos = strlen(filenames[i]) - strlen(strstr(filenames[i], DUMPEXT));
+
+		strncpy(filename, filenames[i], extpos);
+		strcat(filename, UVWEXT);
+		strcat(filename, DUMPEXT);
+
+		printf("%s\n", filename);
+
+		f = fopen((const char *)filename, "w");
+		if (f == NULL)
+			return EXIT_FAILURE;
+
+		if (fclose(f))
+			return EXIT_FAILURE;
+
+		free((void *)filename);
+		f = NULL;
+		filename = NULL;
+	}
+	return EXIT_SUCCESS;
+
+}
+
 size_t spawnfilesr2c(size_t count, const char **filenames)
 {
 	char *filenamex;
