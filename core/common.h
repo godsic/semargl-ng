@@ -21,6 +21,8 @@
 #define MODEXY 0
 #define MODEAP 1
 
+#define UVWEXT ".UVW"
+
 size_t getfreememphys();
 
 size_t spawnfilesr2c(size_t count, const char **filenames);
