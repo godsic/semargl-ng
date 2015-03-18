@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -std=gnu11 -I.
 LDFLAGS=-lm -lfftw3f
-EXECUTABLES= x2kc2c t2wr2c
+EXECUTABLES= x2kc2c t2wr2c mxyz2muvw
 
 all: release
 
