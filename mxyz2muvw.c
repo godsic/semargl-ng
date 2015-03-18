@@ -79,9 +79,9 @@ int main(int argc, char *argv[])
         if (loadspatdatar(offset, bias, stride, &buffer, (const char **)filenames))
             exit(EXIT_FAILURE);
 
-        // printf("\n\e[1;33mSTORE\n");
-        // if (savedatac(stridecmpx, stridecmpx, bias, offset, &buffer_complex, &chunk_bufferx, &chunk_buffery, MODEAP, (const char **)filenames))
-        //     exit(EXIT_FAILURE);
+        printf("\n\e[1;33mSTORE\n");
+        if (savespatdatar(offset, bias, stride, &buffer, (const char **)filenames))
+            exit(EXIT_FAILURE);
     }
 
     // finalize the files
