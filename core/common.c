@@ -236,6 +236,55 @@ size_t loaddatac(size_t count, size_t stride, size_t bias, size_t size, size_t o
 	return EXIT_SUCCESS;
 }
 
+
+size_t savedatar(size_t count, size_t stride, size_t bias, size_t offset, float **gbuffer, float **lbuffer, size_t mode, const char **filenames)
+{
+	size_t i, k, ii;
+	size_t extpos = 0;
+
+	FILE *f;
+	char *filename;
+	float *lbf = *lbuffer;
+	float *gbf = *gbuffer;
+
+	for (i = 0; i < count; i++)
+	{
+		filename = (char *)calloc(strlen(filenames[i]) + strlen(XEXT) + 1, sizeof(char));
+
+		extpos = strlen(filenames[i]) - strlen(strstr(filenames[i], DUMPEXT));
+
+		strncpy(filename, filenames[i], extpos);
+
+		strcat(filename, UVWEXT);
+		strcat(filename, DUMPEXT);
+
+		printf("%s\n", filename);
+
+		f = fopen((const char *)filename, "r+");
+		if (f == NULL)
+			return EXIT_FAILURE;
+
+		setvbuf(f, NULL, _IONBF, 0);
+
+		for (k = 0; k < offset; k++)
+		{
+			ii = k * stride;
+			lbf[k] = gbf[ii + i];
+		}
+
+		if (dsavechunkfloat(f, bias, offset, lbf))
+			return EXIT_FAILURE;
+
+		if (fclose(f))
+			return EXIT_FAILURE;
+
+		free((void *)filename);
+		f = NULL;
+		filename = NULL;
+	}
+	return EXIT_SUCCESS;
+}
+
 size_t savedatac(size_t count, size_t stride, size_t bias, size_t offset, fftwf_complex **gbuffer, float **lbufferx, float **lbuffery, size_t mode, const char **filenames)
 {
 	float x, y;

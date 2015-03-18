@@ -32,6 +32,7 @@ size_t spawnfilesc2c(size_t count, const char **filenamesX, const char **filenam
 size_t loaddatar(size_t count, size_t stride, size_t bias, size_t offset, float **gbuffer, float **lbuffer, const char **filenames);
 size_t loaddatac(size_t count, size_t stride, size_t bias, size_t size, size_t offset, fftwf_complex **gbuffer, float **lbufferx, float **lbuffery, size_t mode, const char **filenamesX, const char **filenamesY);
 
+size_t savedatar(size_t count, size_t stride, size_t bias, size_t offset, float **gbuffer, float **lbuffer, size_t mode, const char **filenames);
 size_t savedatac(size_t count, size_t stride, size_t bias, size_t offset, fftwf_complex **gbuffer, float **lbufferx, float **lbuffery, size_t mode, const char **filenames);
 
 size_t finalizefilesr2r(size_t count, dump *header, const char **filenames);
