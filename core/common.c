@@ -594,3 +594,11 @@ void applywindow(float **in, size_t size, size_t offset, size_t n)
 		}
 	}
 }
+
+inline float dot(float x1, float y1, float z1, float x2, float y2, float z2) {
+	return x1 * x2 + y1 * y2 + z1 * z2;
+}
+
+inline float norm(float x1, float y1, float z1) {
+	return sqrtf(dot(x1, y1, z1, x1, y1, z1));
+}

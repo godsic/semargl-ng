@@ -46,3 +46,7 @@ void removegroundstate(float **in, size_t count, size_t offset, size_t n);
 
 // regular Hanning windows
 void applywindow(float **in, size_t size, size_t offset, size_t n);
+
+float dot(float x1, float y1, float z1, float x2, float y2, float z2);
+
+float norm(float x1, float y1, float z1);
