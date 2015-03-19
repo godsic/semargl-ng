@@ -112,9 +112,6 @@ int main(int argc, char *argv[])
         if (loaddatar(t_count, stride, bias, offset, &buffer, &chunk_buffer, (const char **)filenames))
             exit(EXIT_FAILURE);
 
-        printf("\n\e[0;35mSUBTRACT GROUND STATE\n");
-        removegroundstate(&buffer, t_count, stride, offset / stride);
-
         printf("\n\e[0;35mAPPLYING HANNING WINDOW\n");
         applywindow(&buffer, t_count, stride, offset / stride);
 
