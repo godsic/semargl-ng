@@ -1,9 +1,10 @@
 #include "core/common.h"
+#include "core/preprocess.h"
 
 static dump *frame;
 
 static alignas(ALIGNETOCACHE) float *buffer;
-static alignas(ALIGNETOCACHE) float *chunk_buffer;
+static alignas(ALIGNETOCACHE) float *m0;
 
 static FILE *f;
 
@@ -13,13 +14,13 @@ void cleanup()
 
     if (buffer != NULL)
         free((void *)buffer);
-    if (chunk_buffer != NULL)
-        free((void *)chunk_buffer);
+    if (m0 != NULL)
+        free((void *)m0);
     if (frame != NULL)
         free((void *)frame);
 
     buffer = NULL;
-    chunk_buffer = NULL;
+    m0 = NULL;
     frame = NULL;
 }
 
@@ -28,6 +29,7 @@ int main(int argc, char *argv[])
     size_t t_count = argc - 1;
     size_t c, bias = 0;
     size_t datasize;
+    size_t datacompsize;
     char **filenames = &argv[1];
     size_t batches;
     size_t offset;
@@ -56,15 +58,23 @@ int main(int argc, char *argv[])
 
     datasize = t_count;
 
+    datacompsize = dsizeofdatacomponent(frame);
+
     // Calculate batch size to avoid non-uniform loops (lazy)
     stride = dsizeofdata(frame);
 
     calculatebatch(datasize, stride, &batches, &offset);
 
     buffer = (float *)aligned_alloc(ALIGNETOCACHE, stride * offset * sizeof(float));
-    memset(buffer, 0, stride * offset * sizeof(float));
-    chunk_buffer = (float *)aligned_alloc(ALIGNETOCACHE, sizeof(float) * stride);
+    m0 = (float *)aligned_alloc(ALIGNETOCACHE, stride * sizeof(float));
 
+    memset(buffer, 0, stride * offset * sizeof(float));
+    memset(m0, 0, stride * sizeof(float));
+
+
+    printf("\n\e[1;33mLOAD GROUND STATE\n");
+    if (loadspatdatar(1, 0, stride, &m0, (const char **)filenames))
+        exit(EXIT_FAILURE);
 
     printf("\n\e[1;33mSPANNING SWAP FILES\n");
     if (spawnfilesr2r(t_count, (const char **)filenames))
@@ -78,6 +88,9 @@ int main(int argc, char *argv[])
         printf("\e[0;34mLOAD\n");
         if (loadspatdatar(offset, bias, stride, &buffer, (const char **)filenames))
             exit(EXIT_FAILURE);
+
+        printf("\n\e[0;31mPRE-PROCESSING\n");
+        mxyz2muvw(&buffer, m0, datacompsize, offset);
 
         printf("\n\e[1;33mSTORE\n");
         if (savespatdatar(offset, bias, stride, &buffer, (const char **)filenames))
