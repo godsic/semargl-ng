@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -std=gnu11 -I.
 LDFLAGS=-lm -lfftw3f
-EXECUTABLES= x2kc2c t2wr2c mxyz2muvw
+EXECUTABLES= x2kc2c t2wr2c mxyz2muvw avg
 RFLAGS=-Ofast -march=native
 DFLAGS=-g -O0 -march=native
 
