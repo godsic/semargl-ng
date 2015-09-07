@@ -12,6 +12,8 @@
 
 #define DATARANKCMPX sizeof(fftwf_complex) / sizeof(float)
 
+#define VERBOSE 0
+
 #define XEXT ".X"
 #define YEXT ".Y"
 
@@ -22,6 +24,9 @@
 #define MODEAP 1
 
 #define UVWEXT ".UVW"
+
+#define log(fmt, ...) \
+		do { if (VERBOSE) fprintf(stderr, fmt, ##__VA_ARGS__); } while (0)
 
 size_t getfreememphys();
 

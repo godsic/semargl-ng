@@ -57,9 +57,9 @@ int main(int argc, char *argv[])
     setvbuf(stdout, NULL, _IONBF, 0);
 
     // probe one frame for parameters
-    printf("DUMPHEADERSIZE: %zd\n", DUMPHEADERSIZE);
+    log("DUMPHEADERSIZE: %zd\n", DUMPHEADERSIZE);
 
-    printf("Probing:\t%s ...\n", argv[1]);
+    log("Probing:\t%s ...\n", argv[1]);
     f = fopen((const char *)filenames[0], "r+b");
     if (f == NULL)
         exit(EXIT_FAILURE);
@@ -67,10 +67,10 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     fclose(f);
 
-    printf("components: %zd\n", frame->components);
-    printf("sizex: %zd\n", frame->meshSize[0]);
-    printf("sizey: %zd\n", frame->meshSize[1]);
-    printf("sizez: %zd\n", frame->meshSize[2]);
+    log("components: %zd\n", frame->components);
+    log("sizex: %zd\n", frame->meshSize[0]);
+    log("sizey: %zd\n", frame->meshSize[1]);
+    log("sizez: %zd\n", frame->meshSize[2]);
 
     datasize = dsizeofdata(frame);
 
@@ -87,8 +87,8 @@ int main(int argc, char *argv[])
     chunk_bufferx = (float *)aligned_alloc(ALIGNETOCACHE, sizeof(float) * offset);
     chunk_buffery = (float *)aligned_alloc(ALIGNETOCACHE, sizeof(float) * offset);
 
-    printf("in: %p\n", buffer);
-    printf("out: %p\n", buffer_complex);
+    log("in: %p\n", buffer);
+    log("out: %p\n", buffer_complex);
 
     plan = fftwf_plan_many_dft_r2c(1, (const int *)&t_count, offset,
                                    buffer, NULL,
@@ -99,35 +99,35 @@ int main(int argc, char *argv[])
     if (plan == NULL)
         exit(EXIT_FAILURE);
 
-    printf("\n\e[1;33mSPANNING SWAP FILES\n");
+    log("\n\e[1;33mSPANNING SWAP FILES\n");
     if (spawnfilesr2c(stridecmpx, (const char **)filenames))
         exit(EXIT_FAILURE);
 
     for (c = 0; c < batches; c++)
     {
-        printf("%zd (%zd)\n", c, batches - 1);
+        log("%zd (%zd)\n", c, batches - 1);
         bias = offset * c;
 
-        printf("\e[0;34mLOAD\n");
+        log("\e[0;34mLOAD\n");
         if (loaddatar(t_count, stride, bias, offset, &buffer, &chunk_buffer, (const char **)filenames))
             exit(EXIT_FAILURE);
 
-        printf("\n\e[0;35mAPPLYING HANNING WINDOW\n");
+        log("\n\e[0;35mAPPLYING HANNING WINDOW\n");
         applywindow(&buffer, t_count, stride, offset / stride);
 
-        printf("\n\e[0;31mFFT\n");
+        log("\n\e[0;31mFFT\n");
         fftwf_execute(plan);
 
-        printf("\n\e[1;33mSTORE\n");
+        log("\n\e[1;33mSTORE\n");
         if (savedatac(stridecmpx, stridecmpx, bias, offset, &buffer_complex, &chunk_bufferx, &chunk_buffery, MODEAP, (const char **)filenames))
             exit(EXIT_FAILURE);
     }
 
     // finalize the files
-    printf("\n\e[0;32mFINALIZING\n");
+    log("\n\e[0;32mFINALIZING\n");
     if (finalizefilesr2c(stridecmpx, frame, (const char **)filenames))
         exit(EXIT_FAILURE);
-    printf("\nDONE\n");
+    log("\nDONE\n");
 
     return EXIT_SUCCESS;
 }

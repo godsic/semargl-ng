@@ -23,7 +23,7 @@ size_t spawnfilesr2r(size_t count, const char **filenames)
 		strcat(filename, UVWEXT);
 		strcat(filename, DUMPEXT);
 
-		printf("%s\n", filename);
+		log("%s\n", filename);
 
 		f = fopen((const char *)filename, "w");
 		if (f == NULL)
@@ -65,8 +65,8 @@ size_t spawnfilesr2c(size_t count, const char **filenames)
 		strcat(filenamex, DUMPEXT);
 		strcat(filenamey, DUMPEXT);
 
-		printf("%s\n", filenamex);
-		printf("%s\n", filenamey);
+		log("%s\n", filenamex);
+		log("%s\n", filenamey);
 
 		fx = fopen((const char *)filenamex, "w");
 		if (fx == NULL)
@@ -119,7 +119,7 @@ size_t spawnfilesc2c(size_t count, const char **filenamesX, const char **filenam
 		strcat(filenamexx, DUMPEXT);
 		strcat(filenameyy, DUMPEXT);
 
-		printf("%s\t%s\n", filenamexx, filenameyy);
+		log("%s\t%s\n", filenamexx, filenameyy);
 
 		fx = fopen((const char *)filenamexx, "w");
 		if (fx == NULL)
@@ -157,7 +157,7 @@ size_t loadspatdatar(size_t count, size_t bias, size_t offset, float **gbuffer, 
 		k = i * offset;
 		gbf_offset = &gbf[k];
 
-		printf("%s\n", filenames[ii]);
+		log("%s\n", filenames[ii]);
 
 		f = fopen((const char *)filenames[ii], "rb");
 		if (f == NULL)
@@ -184,7 +184,7 @@ size_t loaddatar(size_t count, size_t stride, size_t bias, size_t offset, float 
 
 	for (i = 0; i < count; i++)
 	{
-		printf("%s\n", filenames[i]);
+		log("%s\n", filenames[i]);
 		f = fopen((const char *)filenames[i], "rb");
 		if (f == NULL)
 			return EXIT_FAILURE;
@@ -216,7 +216,7 @@ size_t loaddatac(size_t count, size_t stride, size_t bias, size_t size, size_t o
 
 	for (i = 0; i < count; i++)
 	{
-		printf("%s\t%s\n", filenamesX[i], filenamesY[i]);
+		log("%s\t%s\n", filenamesX[i], filenamesY[i]);
 
 		fx = fopen((const char *)filenamesX[i], "rb");
 		if (fx == NULL)
@@ -293,7 +293,7 @@ size_t savespatdatar(size_t count, size_t bias, size_t offset, float **gbuffer, 
 		strcat(filename, UVWEXT);
 		strcat(filename, DUMPEXT);
 
-		printf("%s\n", filename);
+		log("%s\n", filename);
 
 		f = fopen((const char *)filename, "r+");
 		if (f == NULL)
@@ -335,7 +335,7 @@ size_t savedatar(size_t count, size_t stride, size_t bias, size_t offset, float 
 		strcat(filename, UVWEXT);
 		strcat(filename, DUMPEXT);
 
-		printf("%s\n", filename);
+		log("%s\n", filename);
 
 		f = fopen((const char *)filename, "r+");
 		if (f == NULL)
@@ -392,8 +392,8 @@ size_t savedatac(size_t count, size_t stride, size_t bias, size_t offset, fftwf_
 		strcat(filenamex, DUMPEXT);
 		strcat(filenamey, DUMPEXT);
 
-		printf("%s\n", filenamex);
-		printf("%s\n", filenamey);
+		log("%s\n", filenamex);
+		log("%s\n", filenamey);
 
 		fx = fopen((const char *)filenamex, "r+");
 		if (fx == NULL)
@@ -465,7 +465,7 @@ size_t finalizefilesr2r(size_t count, dump *header, const char **filenames)
 		strcat(filename, UVWEXT);
 		strcat(filename, DUMPEXT);
 
-		printf("%s\n", filename);
+		log("%s\n", filename);
 
 		f = fopen((const char *)filename, "r+b");
 		if (f == NULL)
@@ -510,8 +510,8 @@ size_t finalizefilesr2c(size_t count, dump *header, const char **filenames)
 		strcat(filenamex, DUMPEXT);
 		strcat(filenamey, DUMPEXT);
 
-		printf("%s\n", filenamex);
-		printf("%s\n", filenamey);
+		log("%s\n", filenamex);
+		log("%s\n", filenamey);
 
 		fx = fopen((const char *)filenamex, "r+b");
 		if (fx == NULL)
@@ -554,8 +554,8 @@ void calculatebatch(size_t datasize, size_t stride, size_t *batches, size_t *off
 	}
 	*batches = datasize / (*offset);
 
-	printf("Availiable memory: %zd FLOATS\n", freememfloat);
-	printf("datasize: %zd\tstride: %zd\t offset: %zd\t batches: %zd\n", datasize, stride, *offset, *batches);
+	log("Availiable memory: %zd FLOATS\n", freememfloat);
+	log("datasize: %zd\tstride: %zd\t offset: %zd\t batches: %zd\n", datasize, stride, *offset, *batches);
 
 	if ((*batches) * (*offset) != datasize)
 		exit(EXIT_FAILURE);
