@@ -8,6 +8,8 @@ static alignas(ALIGNETOCACHE) float *chunk_bufferx;
 static alignas(ALIGNETOCACHE) float *chunk_buffery;
 static alignas(ALIGNETOCACHE) fftwf_complex *buffer_complex;
 
+static alignas(ALIGNETOCACHE) double *t;
+
 static fftwf_plan plan;
 
 static FILE *f;
@@ -24,6 +26,8 @@ void cleanup()
         free((void *)chunk_bufferx);
     if (chunk_buffery != NULL)
         free((void *)chunk_buffery);
+    if (t != NULL)
+        free((void *)t);
     if (frame != NULL)
         free((void *)frame);
     if (plan != NULL)
@@ -36,6 +40,7 @@ void cleanup()
     chunk_buffer = NULL;
     chunk_bufferx = NULL;
     chunk_buffery = NULL;
+    t = NULL;
     frame = NULL;
     plan = NULL;
 }
@@ -72,6 +77,10 @@ int main(int argc, char *argv[])
     log("sizey: %zd\n", frame->meshSize[1]);
     log("sizez: %zd\n", frame->meshSize[2]);
 
+
+    log("Getting time stamps...\n");
+    get_time_from_files((const char **)filenames, &t, &frame, t_count);
+
     datasize = dsizeofdata(frame);
 
     // Calculate batch size to avoid non-uniform loops (lazy)
@@ -103,14 +112,16 @@ int main(int argc, char *argv[])
     if (spawnfilesr2c(stridecmpx, (const char **)filenames))
         exit(EXIT_FAILURE);
 
-    for (c = 0; c < batches; c++)
-    {
+    for (c = 0; c < batches; c++) {
         log("%zd (%zd)\n", c, batches - 1);
         bias = offset * c;
 
         log("\e[0;34mLOAD\n");
         if (loaddatar(t_count, stride, bias, offset, &buffer, &chunk_buffer, (const char **)filenames))
             exit(EXIT_FAILURE);
+
+        log("\n\e[0;35mMAKING GRID UNIFORM\n");
+        batch_gsl_interp_continuous_axis(&buffer, t, t_count, stride, offset);
 
         log("\n\e[0;35mAPPLYING HANNING WINDOW\n");
         applywindow(&buffer, t_count, stride, offset / stride);
