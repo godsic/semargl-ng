@@ -1,5 +1,38 @@
 #include "core/common.h"
 
+size_t get_time_from_files(const char **filenames, double** xx, dump** fframe, size_t count) {
+
+	size_t i;
+
+	FILE *f;
+
+	dump *frame = *fframe;
+
+	(*xx) = (double *)aligned_alloc(ALIGNETOCACHE, sizeof(double) * count);
+
+	for (i = 0; i < count; i++)
+	{
+		f = fopen((const char *)filenames[i], "rb");
+		if (f == NULL)
+			return EXIT_FAILURE;
+
+		if (dloadheader(f, &frame))
+			return EXIT_FAILURE;
+
+		(*xx) [i] = frame->time;
+
+		if (fclose(f))
+			return EXIT_FAILURE;
+		f = NULL;
+
+		log("%s -> %f ns\n", filenames[i], (*xx) [i] * 1.0e9);
+
+	}
+	return EXIT_SUCCESS;
+}
+
+
+
 size_t getfreememphys()
 {
 	return (size_t)sysconf(_SC_PAGESIZE) * (size_t)sysconf(_SC_AVPHYS_PAGES);

@@ -7,12 +7,13 @@
 #include <stdio.h>
 #include "core/dump.h"
 #include "core/fft.h"
+#include "core/interp.h"
 
 #define ALIGNETOCACHE 128
 
 #define DATARANKCMPX sizeof(fftwf_complex) / sizeof(float)
 
-#define VERBOSE 0
+#define VERBOSE 1
 
 #define XEXT ".X"
 #define YEXT ".Y"
@@ -29,6 +30,8 @@
 		do { if (VERBOSE) fprintf(stderr, fmt, ##__VA_ARGS__); } while (0)
 
 size_t getfreememphys();
+
+size_t get_time_from_files(const char **filenames, double** xx, dump** fframe, size_t count);
 
 size_t spawnfilesr2r(size_t count, const char **filenames);
 size_t spawnfilesr2c(size_t count, const char **filenames);
