@@ -55,6 +55,8 @@ int main(int argc, char *argv[])
 
     if (atexit(cleanup))
         exit(EXIT_FAILURE);
+    
+    frame = (dump*)malloc(DUMPHEADERSIZE);
 
     t_count = (argc - 1) / 2;
 

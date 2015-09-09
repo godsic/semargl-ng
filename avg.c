@@ -34,6 +34,8 @@ int main(int argc, char *argv[])
     if (atexit(cleanup))
         exit(EXIT_FAILURE);
 
+    frame = (dump*)malloc(DUMPHEADERSIZE);
+    
     setvbuf(stdout, NULL, _IONBF, 0);
 
     f = fopen((const char *)filenames[0], "r+b");

@@ -6,14 +6,13 @@
 size_t dloadheader(FILE *f, dump **frame)
 {
     size_t success;
-    char *buff = (char *)malloc(DUMPHEADERSIZE);
     success = dsettoheader(f);
     if (success != 0)
         return 1;
-    success = fread(buff, 1, DUMPHEADERSIZE, f);
+    success = fread((void*)(*frame), 1, DUMPHEADERSIZE, f);
     if (success != DUMPHEADERSIZE)
         return 1;
-    *frame = (dump *)buff;
+
     if (memcmp((*frame)->magic, MAGIC, 8) != 0)
     {
         return 1;
