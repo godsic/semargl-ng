@@ -125,8 +125,8 @@ int main(int argc, char *argv[])
         log("\n\e[0;35mMAKING GRID UNIFORM\n");
         batch_gsl_interp_continuous_axis(&buffer, t, t_count, stride, offset);
 
-        log("\n\e[0;35mAPPLYING HANNING WINDOW\n");
-        applywindow(&buffer, t_count, stride, offset / stride);
+        log("\n\e[0;35mAPPLYING WINDOW\n");
+        applywindow(&buffer, t_count, stride, offset);
 
         log("\n\e[0;31mFFT\n");
         fftwf_execute(plan);
