@@ -641,20 +641,21 @@ void removegroundstate(float **in, size_t size, size_t offset, size_t n)
     }
 }
 
-// regular Hanning window
-//
+// Lanczos window
 void applywindow(float **in, size_t size, size_t offset, size_t n)
 {
-    float *out = *in;
-    int i, k, bias;
-    float TWOPIOVERN = 2.0f * M_PI / (float)(size - 1);
-
+    size_t i, k, bias;
+    double arg;
+    double v;
+    log("size: %ld\toffset: %ld\tn: %ld\n", size, offset, n);
     for (k = 0; k < n; k++)
     {
         bias = k * offset;
         for (i = 0; i < size; i++)
         {
-            out[bias + i] = out[bias + i] * 0.5 * (1.0 - cosf(TWOPIOVERN * (float)i));
+            arg = 2.0 * (double)i / (double)(size - 1);
+            v = sinc(arg - 1.0);
+            (*in)[bias + i] = (float)((double)(*in)[bias + i] * v);
         }
     }
 }
@@ -665,4 +666,11 @@ inline float dot(float x1, float y1, float z1, float x2, float y2, float z2) {
 
 inline float norm(float x1, float y1, float z1) {
     return sqrtf(dot(x1, y1, z1, x1, y1, z1));
+}
+
+inline double sinc(double x) {
+    double v;
+    double arg = M_PI * x;
+    v = (x == 0.0) ? 1.0 : sin(arg) / arg;
+    return v;
 }
