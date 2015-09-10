@@ -6,6 +6,10 @@ static dump *frame;
 static alignas(ALIGNETOCACHE) float *buffer;
 static alignas(ALIGNETOCACHE) float *m0;
 
+static alignas(ALIGNETOCACHE) double *stamps;
+
+static char stamp_unit[DUMPFIELDSIZE];
+
 static FILE *f;
 
 void cleanup()
@@ -18,10 +22,13 @@ void cleanup()
         free((void *)m0);
     if (frame != NULL)
         free((void *)frame);
+    if (stamps != NULL)
+        free((void *)stamps);
 
     buffer = NULL;
     m0 = NULL;
     frame = NULL;
+    stamps = NULL;
 }
 
 int main(int argc, char *argv[])
@@ -39,7 +46,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
 
     frame = (dump*)malloc(DUMPHEADERSIZE);
-    
+
     setvbuf(stdout, NULL, _IONBF, 0);
 
     // probe one frame for parameters
@@ -53,11 +60,17 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     fclose(f);
 
+    memset(stamp_unit, '\0', DUMPFIELDSIZE);
+    memcpy(stamp_unit, frame->timeUnit, DUMPFIELDSIZE);
+
     log("components: %zd\n", frame->components);
     log("sizex: %zd\n", frame->meshSize[0]);
     log("sizey: %zd\n", frame->meshSize[1]);
     log("sizez: %zd\n", frame->meshSize[2]);
 
+    log("Getting time stamps...\n");
+    get_time_from_files((const char **)filenames, &stamps, &frame, t_count);
+    
     datasize = t_count;
 
     datacompsize = dsizeofdatacomponent(frame);
@@ -101,7 +114,8 @@ int main(int argc, char *argv[])
 
     // finalize the files
     log("\n\e[0;32mFINALIZING\n");
-    if (finalizefilesr2r(t_count, frame, (const char **)filenames))
+
+    if (finalizefilesr2r_savestamps(t_count, frame, (const char **)filenames, stamps, stamp_unit))
         exit(EXIT_FAILURE);
     log("\nDONE\n");
 
