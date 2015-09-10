@@ -1,5 +1,26 @@
 #include "core/common.h"
 
+
+size_t get_inv_stamps(double** stamps, size_t size) {
+    size_t i;
+    double T = (*stamps)[size-1] - (*stamps)[0];
+    double df = 1.0 / T;
+
+    log("Frequency resolution: %f MHz\n", df * 1.0e-6);
+    log("Fmax: %f MHz\n", df * (double)(size/2));
+
+    for(i=0; i < size/2 + 1; i++) {
+        (*stamps)[i] = (double)i * df;
+    }
+
+    for(i=size/2 + 1; i < size; i++) {
+        (*stamps)[i] = -(double)(size-i) * df;
+    }
+
+    return EXIT_SUCCESS;
+}
+
+
 size_t get_time_from_files(const char **filenames, double** xx, dump** fframe, size_t count) {
 
     size_t i;

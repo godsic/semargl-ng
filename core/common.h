@@ -29,6 +29,8 @@
 #define log(fmt, ...) \
 		do { if (VERBOSE) fprintf(stderr, fmt, ##__VA_ARGS__); } while (0)
 
+size_t get_inv_stamps(double** stamps, size_t size);
+
 size_t getfreememphys();
 
 size_t get_time_from_files(const char **filenames, double** xx, dump** fframe, size_t count);
