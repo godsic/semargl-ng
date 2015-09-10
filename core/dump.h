@@ -8,18 +8,19 @@
 #define ALIGNTODOUBLE sizeof(double)
 #define CRCSIZE 8
 #define DUMPEXT ".dump"
+#define DUMPFIELDSIZE sizeof(int64_t)
 
 // 8 byte alighment
 struct DUMP {
-    alignas(ALIGNTODOUBLE) char magic[8]; // +0
+    alignas(ALIGNTODOUBLE) char magic[DUMPFIELDSIZE]; // +0
     alignas(ALIGNTODOUBLE) int64_t components; // +8
     alignas(ALIGNTODOUBLE) int64_t meshSize[3]; // +16
     alignas(ALIGNTODOUBLE) double meshStep[3]; // +40
-    alignas(ALIGNTODOUBLE) char meshUnit[8]; // +64
+    alignas(ALIGNTODOUBLE) char meshUnit[DUMPFIELDSIZE]; // +64
     alignas(ALIGNTODOUBLE) double time; // +72
-    alignas(ALIGNTODOUBLE) char timeUnit[8]; // +80
-    alignas(ALIGNTODOUBLE) char dataLabel[8]; // +88
-    alignas(ALIGNTODOUBLE) char dataUnit[8]; // +96
+    alignas(ALIGNTODOUBLE) char timeUnit[DUMPFIELDSIZE]; // +80
+    alignas(ALIGNTODOUBLE) char dataLabel[DUMPFIELDSIZE]; // +88
+    alignas(ALIGNTODOUBLE) char dataUnit[DUMPFIELDSIZE]; // +96
     alignas(ALIGNTODOUBLE) uint64_t precission; // +104
     alignas(ALIGNTODOUBLE) float data[]; // +112 but should be on 128!!!!
     // discard CRC
