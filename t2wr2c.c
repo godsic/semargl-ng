@@ -8,11 +8,14 @@ static alignas(ALIGNETOCACHE) float *chunk_bufferx;
 static alignas(ALIGNETOCACHE) float *chunk_buffery;
 static alignas(ALIGNETOCACHE) fftwf_complex *buffer_complex;
 
-static alignas(ALIGNETOCACHE) double *t;
+static alignas(ALIGNETOCACHE) double *stamps;
+static char stamp_unit[DUMPFIELDSIZE];
+static char stamp_inv_unit[DUMPFIELDSIZE] = "Hz\0";
 
 static fftwf_plan plan;
 
 static FILE *f;
+
 
 void cleanup()
 {
@@ -26,8 +29,8 @@ void cleanup()
         free((void *)chunk_bufferx);
     if (chunk_buffery != NULL)
         free((void *)chunk_buffery);
-    if (t != NULL)
-        free((void *)t);
+    if (stamps != NULL)
+        free((void *)stamps);
     if (frame != NULL)
         free((void *)frame);
     if (plan != NULL)
@@ -40,7 +43,7 @@ void cleanup()
     chunk_buffer = NULL;
     chunk_bufferx = NULL;
     chunk_buffery = NULL;
-    t = NULL;
+    stamps = NULL;
     frame = NULL;
     plan = NULL;
 }
@@ -74,6 +77,9 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     fclose(f);
 
+    memset(stamp_unit, '\0', DUMPFIELDSIZE);
+    memcpy(stamp_unit, frame->timeUnit, DUMPFIELDSIZE);
+
     log("components: %zd\n", frame->components);
     log("sizex: %zd\n", frame->meshSize[0]);
     log("sizey: %zd\n", frame->meshSize[1]);
@@ -81,7 +87,7 @@ int main(int argc, char *argv[])
 
 
     log("Getting time stamps...\n");
-    get_time_from_files((const char **)filenames, &t, &frame, t_count);
+    get_time_from_files((const char **)filenames, &stamps, &frame, t_count);
 
     datasize = dsizeofdata(frame);
 
@@ -123,7 +129,7 @@ int main(int argc, char *argv[])
             exit(EXIT_FAILURE);
 
         log("\n\e[0;35mMAKING GRID UNIFORM\n");
-        batch_gsl_interp_continuous_axis(&buffer, t, t_count, stride, offset);
+        batch_gsl_interp_continuous_axis(&buffer, stamps, t_count, stride, offset);
 
         log("\n\e[0;35mAPPLYING WINDOW\n");
         applywindow(&buffer, t_count, stride, offset);
@@ -136,9 +142,11 @@ int main(int argc, char *argv[])
             exit(EXIT_FAILURE);
     }
 
+    get_inv_stamps(&stamps, t_count);
+
     // finalize the files
     log("\n\e[0;32mFINALIZING\n");
-    if (finalizefilesr2c(stridecmpx, frame, (const char **)filenames))
+    if (finalizefilesr2c_savestamps(stridecmpx, frame, (const char **)filenames, stamps, stamp_inv_unit))
         exit(EXIT_FAILURE);
     log("\nDONE\n");
 
