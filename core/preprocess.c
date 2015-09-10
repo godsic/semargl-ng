@@ -1,15 +1,17 @@
 #include "core/preprocess.h"
 
 
-void avg(float **data, size_t comp, size_t comp_size, size_t number_of_frames, size_t frame_bias) {
+void avg(float **data, double* stamps, size_t comp, size_t comp_size, size_t number_of_frames, size_t frame_bias) {
 	size_t i, k, c, bias;
 	float *m = *data;
 	float avg = 0.0f;
+	double stamp;
 	float norm = 1.0f / (float)comp_size;
 
 	for (k = 0; k < number_of_frames; k++) {
 		bias = comp * comp_size * k;
-		printf("%zd", frame_bias + k);
+		stamp = stamps[frame_bias + k];
+		printf("%f", stamp);
 		for (c = 0; c < comp; c++) {
 			avg = 0.0f;
 			printf("\t");

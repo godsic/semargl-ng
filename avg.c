@@ -5,6 +5,8 @@ static dump *frame;
 
 static alignas(ALIGNETOCACHE) float *buffer;
 
+static double* stamps;
+
 static FILE *f;
 
 void cleanup()
@@ -15,9 +17,12 @@ void cleanup()
         free((void *)buffer);
     if (frame != NULL)
         free((void *)frame);
+    if (stamps != NULL)
+        free((void *)stamps);
 
     buffer = NULL;
     frame = NULL;
+    stamps = NULL;
 }
 
 int main(int argc, char *argv[])
@@ -35,7 +40,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
 
     frame = (dump*)malloc(DUMPHEADERSIZE);
-    
+
     setvbuf(stdout, NULL, _IONBF, 0);
 
     f = fopen((const char *)filenames[0], "r+b");
@@ -44,6 +49,9 @@ int main(int argc, char *argv[])
     if (dloadheader(f, &frame))
         exit(EXIT_FAILURE);
     fclose(f);
+
+    log("Getting time stamps...\n");
+    get_time_from_files((const char **)filenames, &stamps, &frame, t_count);
 
     datasize = t_count;
 
@@ -65,7 +73,7 @@ int main(int argc, char *argv[])
         if (loadspatdatar(offset, bias, stride, &buffer, (const char **)filenames))
             exit(EXIT_FAILURE);
 
-        avg(&buffer, frame->components, datacompsize, offset, bias);
+        avg(&buffer, stamps, frame->components, datacompsize, offset, bias);
     }
 
     return EXIT_SUCCESS;
