@@ -550,6 +550,7 @@ size_t finalizefilesr2r(size_t count, dump *header, const char **filenames)
     return EXIT_SUCCESS;
 }
 
+
 size_t finalizefilesr2c(size_t count, dump *header, const char **filenames)
 {
     FILE *fx;
@@ -561,6 +562,126 @@ size_t finalizefilesr2c(size_t count, dump *header, const char **filenames)
 
     for (i = 0; i < count; i++)
     {
+        filenamex = (char *)calloc(strlen(filenames[i]) + strlen(XEXT) + 1, sizeof(char));
+        filenamey = (char *)calloc(strlen(filenames[i]) + strlen(YEXT) + 1, sizeof(char));
+
+        extpos = strlen(filenames[i]) - strlen(strstr(filenames[i], DUMPEXT));
+
+        strncpy(filenamex, filenames[i], extpos);
+        strncpy(filenamey, filenames[i], extpos);
+
+        strcat(filenamex, XEXT);
+        strcat(filenamey, YEXT);
+        strcat(filenamex, DUMPEXT);
+        strcat(filenamey, DUMPEXT);
+
+        log("%s\n", filenamex);
+        log("%s\n", filenamey);
+
+        fx = fopen((const char *)filenamex, "r+b");
+        if (fx == NULL)
+            return EXIT_FAILURE;
+        fy = fopen((const char *)filenamey, "r+b");
+        if (fy == NULL)
+            return EXIT_FAILURE;
+        setvbuf(fx, NULL, _IONBF, 0);
+        setvbuf(fy, NULL, _IONBF, 0);
+
+        if (dfinilize(fx, header))
+            return EXIT_FAILURE;
+        if (dfinilize(fy, header))
+            return EXIT_FAILURE;
+
+        if (fclose(fx))
+            return EXIT_FAILURE;
+        if (fclose(fy))
+            return EXIT_FAILURE;
+        free((void *)filenamex);
+        free((void *)filenamey);
+        fx = NULL;
+        fy = NULL;
+        filenamex = NULL;
+        filenamey = NULL;
+    }
+    return EXIT_SUCCESS;
+}
+
+size_t finalizefilesr2r_savestamps(size_t count, dump *header, const char **filenames, double* stamps, const char stamp_unit[8])
+{
+    FILE *fx;
+    FILE *fy;
+    char *filenamex;
+    char *filenamey;
+    size_t i;
+    size_t extpos = 0;
+
+    memcpy(header->timeUnit, stamp_unit, DUMPFIELDSIZE);
+
+    for (i = 0; i < count; i++)
+    {
+
+        header->time = stamps[i];
+
+        filenamex = (char *)calloc(strlen(filenames[i]) + strlen(XEXT) + 1, sizeof(char));
+        filenamey = (char *)calloc(strlen(filenames[i]) + strlen(YEXT) + 1, sizeof(char));
+
+        extpos = strlen(filenames[i]) - strlen(strstr(filenames[i], DUMPEXT));
+
+        strncpy(filenamex, filenames[i], extpos);
+        strncpy(filenamey, filenames[i], extpos);
+
+        strcat(filenamex, XEXT);
+        strcat(filenamey, YEXT);
+        strcat(filenamex, DUMPEXT);
+        strcat(filenamey, DUMPEXT);
+
+        log("%s\n", filenamex);
+        log("%s\n", filenamey);
+
+        fx = fopen((const char *)filenamex, "r+b");
+        if (fx == NULL)
+            return EXIT_FAILURE;
+        fy = fopen((const char *)filenamey, "r+b");
+        if (fy == NULL)
+            return EXIT_FAILURE;
+        setvbuf(fx, NULL, _IONBF, 0);
+        setvbuf(fy, NULL, _IONBF, 0);
+
+        if (dfinilize(fx, header))
+            return EXIT_FAILURE;
+        if (dfinilize(fy, header))
+            return EXIT_FAILURE;
+
+        if (fclose(fx))
+            return EXIT_FAILURE;
+        if (fclose(fy))
+            return EXIT_FAILURE;
+        free((void *)filenamex);
+        free((void *)filenamey);
+        fx = NULL;
+        fy = NULL;
+        filenamex = NULL;
+        filenamey = NULL;
+    }
+    return EXIT_SUCCESS;
+}
+
+size_t finalizefilesr2c_savestamps(size_t count, dump *header, const char **filenames, double* stamps, const char stamp_unit[8])
+{
+    FILE *fx;
+    FILE *fy;
+    char *filenamex;
+    char *filenamey;
+    size_t i;
+    size_t extpos = 0;
+
+    memcpy(header->timeUnit, stamp_unit, DUMPFIELDSIZE);
+
+    for (i = 0; i < count; i++)
+    {
+
+        header->time = stamps[i];
+
         filenamex = (char *)calloc(strlen(filenames[i]) + strlen(XEXT) + 1, sizeof(char));
         filenamey = (char *)calloc(strlen(filenames[i]) + strlen(YEXT) + 1, sizeof(char));
 

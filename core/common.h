@@ -48,6 +48,9 @@ size_t savedatac(size_t count, size_t stride, size_t bias, size_t offset, fftwf_
 size_t finalizefilesr2r(size_t count, dump *header, const char **filenames);
 size_t finalizefilesr2c(size_t count, dump *header, const char **filenames);
 
+size_t finalizefilesr2r_savestamps(size_t count, dump *header, const char **filenames, double* stamps, const char stamp_unit[8]);
+size_t finalizefilesr2c_savestamps(size_t count, dump *header, const char **filenames, double* stamps, const char stamp_unit[8]);
+
 void calculatebatch(size_t datasize, size_t stride, size_t *batches, size_t *offset);
 
 void removegroundstate(float **in, size_t count, size_t offset, size_t n);
