@@ -11,7 +11,7 @@ void avg(float **data, double* stamps, size_t comp, size_t comp_size, size_t num
 	for (k = 0; k < number_of_frames; k++) {
 		bias = comp * comp_size * k;
 		stamp = stamps[frame_bias + k];
-		printf("%f", stamp);
+		printf("%.8e", stamp);
 		for (c = 0; c < comp; c++) {
 			avg = 0.0f;
 			printf("\t");
@@ -19,7 +19,7 @@ void avg(float **data, double* stamps, size_t comp, size_t comp_size, size_t num
 				avg = avg + m[bias + c * comp_size + i];
 			}
 			avg = avg * norm;
-			printf("%f", avg);
+			printf("%.8e", avg);
 		}
 		printf("\n");
 	}
