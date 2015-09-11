@@ -248,7 +248,7 @@ size_t loadspatdatar(size_t count, size_t bias, size_t offset, float **gbuffer, 
         if (f == NULL)
             return EXIT_FAILURE;
 
-        setvbuf(f, NULL, _IONBF, 0);
+        setvbuf(f, NULL, _IOFBF, 0);
 
         if (dloadchunkfloat(f, 0, offset, &gbf_offset))
             return EXIT_FAILURE;
@@ -273,7 +273,7 @@ size_t loaddatar(size_t count, size_t stride, size_t bias, size_t offset, float 
         f = fopen((const char *)filenames[i], "rb");
         if (f == NULL)
             return EXIT_FAILURE;
-        setvbuf(f, NULL, _IONBF, 0);
+        setvbuf(f, NULL, _IOFBF, 0);
         if (dloadchunkfloat(f, bias, offset, &lbf))
             return EXIT_FAILURE;
         for (k = 0; k < offset; k++)
@@ -310,8 +310,8 @@ size_t loaddatac(size_t count, size_t stride, size_t bias, size_t size, size_t o
         if (fy == NULL)
             return EXIT_FAILURE;
 
-        setvbuf(fx, NULL, _IONBF, 0);
-        setvbuf(fy, NULL, _IONBF, 0);
+        setvbuf(fx, NULL, _IOFBF, 0);
+        setvbuf(fy, NULL, _IOFBF, 0);
 
         if (dloadchunkfloat(fx, bias, size, &lbfx))
             return EXIT_FAILURE;
@@ -384,7 +384,7 @@ size_t savespatdatar(size_t count, size_t bias, size_t offset, float **gbuffer, 
         if (f == NULL)
             return EXIT_FAILURE;
 
-        setvbuf(f, NULL, _IONBF, 0);
+        setvbuf(f, NULL, _IOFBF, 0);
 
         if (dsavechunkfloat(f, 0, offset, gbf_offset))
             return EXIT_FAILURE;
@@ -426,7 +426,7 @@ size_t savedatar(size_t count, size_t stride, size_t bias, size_t offset, float 
         if (f == NULL)
             return EXIT_FAILURE;
 
-        setvbuf(f, NULL, _IONBF, 0);
+        setvbuf(f, NULL, _IOFBF, 0);
 
         for (k = 0; k < offset; k++)
         {
@@ -487,8 +487,8 @@ size_t savedatac(size_t count, size_t stride, size_t bias, size_t offset, fftwf_
         if (fy == NULL)
             return EXIT_FAILURE;
 
-        setvbuf(fx, NULL, _IONBF, 0);
-        setvbuf(fy, NULL, _IONBF, 0);
+        setvbuf(fx, NULL, _IOFBF, 0);
+        setvbuf(fy, NULL, _IOFBF, 0);
 
         for (k = 0; k < offset; k++)
         {
@@ -556,7 +556,7 @@ size_t finalizefilesr2r(size_t count, dump *header, const char **filenames)
         if (f == NULL)
             return EXIT_FAILURE;
 
-        setvbuf(f, NULL, _IONBF, 0);
+        setvbuf(f, NULL, _IOFBF, 0);
 
         if (dfinilize(f, header))
             return EXIT_FAILURE;
@@ -605,8 +605,8 @@ size_t finalizefilesr2c(size_t count, dump *header, const char **filenames)
         fy = fopen((const char *)filenamey, "r+b");
         if (fy == NULL)
             return EXIT_FAILURE;
-        setvbuf(fx, NULL, _IONBF, 0);
-        setvbuf(fy, NULL, _IONBF, 0);
+        setvbuf(fx, NULL, _IOFBF, 0);
+        setvbuf(fy, NULL, _IOFBF, 0);
 
         if (dfinilize(fx, header))
             return EXIT_FAILURE;
@@ -655,7 +655,7 @@ size_t finalizefilesr2r_savestamps(size_t count, dump *header, const char **file
         if (f == NULL)
             return EXIT_FAILURE;
 
-        setvbuf(f, NULL, _IONBF, 0);
+        setvbuf(f, NULL, _IOFBF, 0);
 
         if (dfinilize(f, header))
             return EXIT_FAILURE;
@@ -708,8 +708,8 @@ size_t finalizefilesr2c_savestamps(size_t count, dump *header, const char **file
         fy = fopen((const char *)filenamey, "r+b");
         if (fy == NULL)
             return EXIT_FAILURE;
-        setvbuf(fx, NULL, _IONBF, 0);
-        setvbuf(fy, NULL, _IONBF, 0);
+        setvbuf(fx, NULL, _IOFBF, 0);
+        setvbuf(fy, NULL, _IOFBF, 0);
 
         if (dfinilize(fx, header))
             return EXIT_FAILURE;
