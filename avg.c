@@ -50,8 +50,8 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     fclose(f);
 
-    log("Getting time stamps...\n");
-    get_time_from_files((const char **)filenames, &stamps, &frame, t_count);
+    log("Getting stamps...\n");
+    get_stamps_from_files((const char **)filenames, &stamps, &frame, t_count);
 
     datasize = t_count;
 

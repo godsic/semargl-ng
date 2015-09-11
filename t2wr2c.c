@@ -86,8 +86,8 @@ int main(int argc, char *argv[])
     log("sizez: %zd\n", frame->meshSize[2]);
 
 
-    log("Getting time stamps...\n");
-    get_time_from_files((const char **)filenames, &stamps, &frame, t_count);
+    log("Getting stamps...\n");
+    get_stamps_from_files((const char **)filenames, &stamps, &frame, t_count);
 
     datasize = dsizeofdata(frame);
 
