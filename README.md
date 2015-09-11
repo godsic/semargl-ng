@@ -13,8 +13,7 @@ ___
 #### calculating mode profiles (point-wise FFT):
 
 1. convert ovf data produced by either OOMMF or mumax3 to DUMP format, i.e. `mumax3-convert -dump *.ovf`. Alternatively, one can instruct mumax3 to save dump files directly by setting `OutputFormat = DUMP`.
-2. clean up nasty linux cache: `sync && echo 3 > /proc/sys/vm/drop_caches`
-3. The data could be pre-processed to extract dynamic part of the magnetization vector and transforming it to *uvw* coordinates as given by the local direction of the magnetization vector in the ground state
+2. The data could be pre-processed to extract dynamic part of the magnetization vector and transforming it to *uvw* coordinates as given by the local direction of the magnetization vector in the ground state
 : `mxyz2muvw *.dump`. This will output files suffixed with *.UVW.dump.
 3. `t2wr2c *.(UVW.)dump` - transform (pre-processed) data from t(ime) to w(frequency) domain assuming r(eal) input and output c(omplex) data. The data is saved into two set of files, namely *.X.dump and *.Y.dump for amplitude and phase, respectively.
 4. Convert output *.dump files to VTK, e.g. `mumax3-convert -vtk=binary *.X.dump`.
