@@ -46,7 +46,7 @@ size_t get_time_from_files(const char **filenames, double** xx, dump** fframe, s
             return EXIT_FAILURE;
         f = NULL;
 
-        log("%s -> %f ns\n", filenames[i], (*xx) [i] * 1.0e9);
+        log("%s -> %g %s\n", filenames[i], (*xx) [i], frame->timeUnit);
 
     }
     return EXIT_SUCCESS;
@@ -639,7 +639,7 @@ size_t finalizefilesr2r_savestamps(size_t count, dump *header, const char **file
     for (i = 0; i < count; i++)
     {
         header->time = stamps[i];
-        
+
         filename = (char *)calloc(strlen(filenames[i]) + strlen(UVWEXT) + 1, sizeof(char));
 
         extpos = strlen(filenames[i]) - strlen(strstr(filenames[i], DUMPEXT));
