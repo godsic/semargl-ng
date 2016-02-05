@@ -1,9 +1,9 @@
 CC=gcc
 CFLAGS=-Wall -std=gnu11 -I.
-LDFLAGS=-lm -lfftw3f -lgsl -lgslcblas
+LDFLAGS=-static -L. -lfftw3f -lm -lgsl
 EXECUTABLES= x2kc2c t2wr2c mxyz2muvw avg
-RFLAGS=-Ofast -march=native
-DFLAGS=-g -O0 -march=native
+RFLAGS=-O3 -march=sandybridge
+DFLAGS=-g -O0 -march=sandybridge
 
 all: release
 
