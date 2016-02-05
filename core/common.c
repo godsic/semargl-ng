@@ -21,6 +21,26 @@ size_t get_inv_stamps(double** stamps, size_t size)
     return EXIT_SUCCESS;
 }
 
+size_t read_header(const char *filename, dump** fframe)
+{
+
+    FILE *f;
+    dump *frame = *fframe;
+
+    f = fopen(filename, "rb");
+    if (f == NULL)
+        return EXIT_FAILURE;
+
+    if (dloadheader(f, &frame))
+        return EXIT_FAILURE;
+
+    if (fclose(f))
+        return EXIT_FAILURE;
+    f = NULL;
+
+    return EXIT_SUCCESS;
+}
+
 size_t get_stamps_from_files(const char **filenames, double** xx, dump** fframe, size_t count)
 {
 
