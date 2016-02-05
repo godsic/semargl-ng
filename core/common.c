@@ -1,27 +1,28 @@
 #include "core/common.h"
 
 
-size_t get_inv_stamps(double** stamps, size_t size) {
+size_t get_inv_stamps(double** stamps, size_t size)
+{
     size_t i;
-    double T = (*stamps)[size-1] - (*stamps)[0];
+    double T = (*stamps)[size - 1] - (*stamps)[0];
     double df = 1.0 / T;
 
     log("Frequency resolution: %f MHz\n", df * 1.0e-6);
-    log("Fmax: %f MHz\n", df * (double)(size/2));
+    log("Fmax: %f MHz\n", df * (double)(size / 2));
 
-    for(i=0; i < size/2 + 1; i++) {
+    for (i = 0; i < size / 2 + 1; i++) {
         (*stamps)[i] = (double)i * df;
     }
 
-    for(i=size/2 + 1; i < size; i++) {
-        (*stamps)[i] = -(double)(size-i) * df;
+    for (i = size / 2 + 1; i < size; i++) {
+        (*stamps)[i] = -(double)(size - i) * df;
     }
 
     return EXIT_SUCCESS;
 }
 
-
-size_t get_stamps_from_files(const char **filenames, double** xx, dump** fframe, size_t count) {
+size_t get_stamps_from_files(const char **filenames, double** xx, dump** fframe, size_t count)
+{
 
     size_t i;
 
@@ -31,8 +32,7 @@ size_t get_stamps_from_files(const char **filenames, double** xx, dump** fframe,
 
     (*xx) = (double *)aligned_alloc(ALIGNETOCACHE, sizeof(double) * count);
 
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         f = fopen((const char *)filenames[i], "rb");
         if (f == NULL)
             return EXIT_FAILURE;
@@ -98,8 +98,7 @@ size_t spawnfilesr2r(size_t count, const char **filenames)
     FILE *f;
     size_t i;
 
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         filename = (char *)calloc(strlen(filenames[i]) + strlen(UVWEXT) + 1, sizeof(char));
 
         extpos = strlen(filenames[i]) - strlen(strstr(filenames[i], DUMPEXT));
@@ -135,8 +134,7 @@ size_t spawnfilesr2c(size_t count, const char **filenames)
     FILE *fy;
     size_t i;
 
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         filenamex = (char *)calloc(strlen(filenames[i]) + strlen(XEXT) + 1, sizeof(char));
         filenamey = (char *)calloc(strlen(filenames[i]) + strlen(YEXT) + 1, sizeof(char));
 
@@ -188,8 +186,7 @@ size_t spawnfilesc2c(size_t count, const char **filenamesX, const char **filenam
 
     size_t i;
 
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         filenamexx = (char *)calloc(strlen(filenamesX[i]) + strlen(XEXT) + 1, sizeof(char));
         filenameyy = (char *)calloc(strlen(filenamesY[i]) + strlen(YEXT) + 1, sizeof(char));
 
@@ -236,8 +233,7 @@ size_t loadspatdatar(size_t count, size_t bias, size_t offset, float **gbuffer, 
     float *gbf_offset;
     size_t i, k, ii;
 
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         ii = bias + i;
         k = i * offset;
         gbf_offset = &gbf[k];
@@ -267,8 +263,7 @@ size_t loaddatar(size_t count, size_t stride, size_t bias, size_t offset, float 
     float *gbf = *gbuffer;
     size_t i, k, ii;
 
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         log("%s\n", filenames[i]);
         f = fopen((const char *)filenames[i], "rb");
         if (f == NULL)
@@ -276,8 +271,7 @@ size_t loaddatar(size_t count, size_t stride, size_t bias, size_t offset, float 
         setvbuf(f, NULL, _IOFBF, 0);
         if (dloadchunkfloat(f, bias, offset, &lbf))
             return EXIT_FAILURE;
-        for (k = 0; k < offset; k++)
-        {
+        for (k = 0; k < offset; k++) {
             ii = k * stride;
             gbf[ii + i] = lbf[k];
         }
@@ -299,8 +293,7 @@ size_t loaddatac(size_t count, size_t stride, size_t bias, size_t size, size_t o
     float x, y;
     double xx, yy;
 
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         log("%s\t%s\n", filenamesX[i], filenamesY[i]);
 
         fx = fopen((const char *)filenamesX[i], "rb");
@@ -318,13 +311,11 @@ size_t loaddatac(size_t count, size_t stride, size_t bias, size_t size, size_t o
         if (dloadchunkfloat(fy, bias, size, &lbfy))
             return EXIT_FAILURE;
 
-        for (k = 0; k < offset; k++)
-        {
+        for (k = 0; k < offset; k++) {
             ii = k * stride;
             x = lbfx[k];
             y = lbfy[k];
-            switch (mode)
-            {
+            switch (mode) {
             case MODEAP:
                 xx = (double)x;
                 yy = (double)y;
@@ -363,8 +354,7 @@ size_t savespatdatar(size_t count, size_t bias, size_t offset, float **gbuffer, 
     float *gbf = *gbuffer;
     float *gbf_offset;
 
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         ii = bias + i;
         k = i * offset;
         gbf_offset = &gbf[k];
@@ -409,8 +399,7 @@ size_t savedatar(size_t count, size_t stride, size_t bias, size_t offset, float 
     float *lbf = *lbuffer;
     float *gbf = *gbuffer;
 
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         filename = (char *)calloc(strlen(filenames[i]) + strlen(UVWEXT) + 1, sizeof(char));
 
         extpos = strlen(filenames[i]) - strlen(strstr(filenames[i], DUMPEXT));
@@ -428,8 +417,7 @@ size_t savedatar(size_t count, size_t stride, size_t bias, size_t offset, float 
 
         setvbuf(f, NULL, _IOFBF, 0);
 
-        for (k = 0; k < offset; k++)
-        {
+        for (k = 0; k < offset; k++) {
             ii = k * stride;
             lbf[k] = gbf[ii + i];
         }
@@ -462,8 +450,7 @@ size_t savedatac(size_t count, size_t stride, size_t bias, size_t offset, fftwf_
     float *lbfy = *lbuffery;
     fftwf_complex *gbf = *gbuffer;
 
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         filenamex = (char *)calloc(strlen(filenames[i]) + strlen(XEXT) + 1, sizeof(char));
         filenamey = (char *)calloc(strlen(filenames[i]) + strlen(YEXT) + 1, sizeof(char));
 
@@ -490,14 +477,12 @@ size_t savedatac(size_t count, size_t stride, size_t bias, size_t offset, fftwf_
         setvbuf(fx, NULL, _IOFBF, 0);
         setvbuf(fy, NULL, _IOFBF, 0);
 
-        for (k = 0; k < offset; k++)
-        {
+        for (k = 0; k < offset; k++) {
             ii = k * stride;
 
             x = gbf[ii + i][0];
             y = gbf[ii + i][1];
-            switch (mode)
-            {
+            switch (mode) {
             case MODEAP:
                 xx = x;
                 yy = y;
@@ -539,8 +524,7 @@ size_t finalizefilesr2r(size_t count, dump *header, const char **filenames)
     size_t i;
     size_t extpos = 0;
 
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         filename = (char *)calloc(strlen(filenames[i]) + strlen(UVWEXT) + 1, sizeof(char));
 
         extpos = strlen(filenames[i]) - strlen(strstr(filenames[i], DUMPEXT));
@@ -581,8 +565,7 @@ size_t finalizefilesr2c(size_t count, dump *header, const char **filenames)
     size_t i;
     size_t extpos = 0;
 
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         filenamex = (char *)calloc(strlen(filenames[i]) + strlen(XEXT) + 1, sizeof(char));
         filenamey = (char *)calloc(strlen(filenames[i]) + strlen(YEXT) + 1, sizeof(char));
 
@@ -636,8 +619,7 @@ size_t finalizefilesr2r_savestamps(size_t count, dump *header, const char **file
 
     memcpy(header->timeUnit, stamp_unit, DUMPFIELDSIZE);
 
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         header->time = stamps[i];
 
         filename = (char *)calloc(strlen(filenames[i]) + strlen(UVWEXT) + 1, sizeof(char));
@@ -681,8 +663,7 @@ size_t finalizefilesr2c_savestamps(size_t count, dump *header, const char **file
 
     memcpy(header->timeUnit, stamp_unit, DUMPFIELDSIZE);
 
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
 
         header->time = stamps[i];
 
@@ -737,8 +718,7 @@ void calculatebatch(size_t datasize, size_t stride, size_t *batches, size_t *off
     freememfloat = floor(0.6 * (double)getfreememphys() / (double)sizeof(float));
 
     (*offset) = floor((double)freememfloat / (double)stride); // the chunk cannot exceed this value
-    while (datasize % (*offset) != 0)
-    {
+    while (datasize % (*offset) != 0) {
         (*offset)--;
     }
     *batches = datasize / (*offset);
@@ -755,12 +735,10 @@ void removegroundstate(float **in, size_t size, size_t offset, size_t n)
     float *out = *in;
     float y0;
     int i, k, bias;
-    for (k = 0; k < n; k++)
-    {
+    for (k = 0; k < n; k++) {
         bias = k * offset;
         y0 = out[bias];
-        for (i = 0; i < size; i++)
-        {
+        for (i = 0; i < size; i++) {
             out[bias + i] = out[bias + i] - y0;
         }
     }
@@ -773,27 +751,29 @@ void applywindow(float **in, size_t size, size_t offset, size_t n)
     double arg;
     double v;
     log("size: %ld\toffset: %ld\tn: %ld\n", size, offset, n);
-    for (k = 0; k < n; k++)
-    {
+    for (k = 0; k < n; k++) {
         bias = k * offset;
-        for (i = 0; i < size; i++)
-        {
+        for (i = 0; i < size; i++) {
             arg = 2.0 * (double)i / (double)(size - 1);
             v = sinc(arg - 1.0);
             (*in)[bias + i] = (float)((double)(*in)[bias + i] * v);
         }
+
     }
 }
 
-inline float dot(float x1, float y1, float z1, float x2, float y2, float z2) {
+inline float dot(float x1, float y1, float z1, float x2, float y2, float z2)
+{
     return x1 * x2 + y1 * y2 + z1 * z2;
 }
 
-inline float norm(float x1, float y1, float z1) {
+inline float norm(float x1, float y1, float z1)
+{
     return sqrtf(dot(x1, y1, z1, x1, y1, z1));
 }
 
-inline double sinc(double x) {
+inline double sinc(double x)
+{
     double v;
     double arg = M_PI * x;
     v = (x == 0.0) ? 1.0 : sin(arg) / arg;
