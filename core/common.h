@@ -66,3 +66,5 @@ float dot(float x1, float y1, float z1, float x2, float y2, float z2);
 float norm(float x1, float y1, float z1);
 
 double sinc(double x);
+
+double flat_top(double x);

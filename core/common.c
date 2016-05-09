@@ -799,3 +799,17 @@ inline double sinc(double x)
     v = (x == 0.0) ? 1.0 : sin(arg) / arg;
     return v;
 }
+
+inline double flat_top(double x)
+{
+    const double PI2 = 2.0 * M_PI;
+    const double PI4 = 4.0 * M_PI;
+    const double PI6 = 6.0 * M_PI;
+    const double PI8 = 8.0 * M_PI;
+    const double A0 = 1.0;
+    const double A1 = 1.93;
+    const double A2 = 1.29;
+    const double A3 = 0.388;
+    const double A4 = 0.028;
+    return A0 - A1*cos(PI2*x) + A2*cos(PI4*x) - A3*cos(PI6*x) + A4*cos(PI8*x);
+}
