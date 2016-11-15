@@ -36,8 +36,9 @@ void cleanup()
     if (plan != NULL)
         fftwf_destroy_plan(plan);
 
-    fftwf_cleanup();
-
+    // fftwf_cleanup();
+    fftwf_cleanup_threads();
+    
     buffer = NULL;
     buffer_complex = NULL;
     chunk_buffer = NULL;
@@ -58,9 +59,22 @@ int main(int argc, char *argv[])
     size_t offset;
     size_t stride;
     size_t stridecmpx;
+    int err;
+    int Nthreads;
 
     if (atexit(cleanup))
         exit(EXIT_FAILURE);
+
+    // setup OpenMP
+    Nthreads = omp_get_max_threads();
+    log("Using %d OpenMP threads\n", Nthreads);
+    omp_set_num_threads(Nthreads);
+
+    // setup mutithreaded FFTW
+    err = init_threaded_fftw();
+    if (err == 0) {
+    	exit(EXIT_FAILURE);
+    }
 
     frame = (dump*)malloc(DUMPHEADERSIZE);
 
