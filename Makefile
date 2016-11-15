@@ -1,8 +1,8 @@
 CC=gcc
 CFLAGS=-Wall -std=gnu11 -I.
-LDFLAGS=-static -L. -lfftw3f -lm -lgsl
+LDFLAGS=-static -flto -L. -lfftw3f_omp -lfftw3f -lm -lgsl -fopenmp
 EXECUTABLES= x2kc2c t2wr2c mxyz2muvw avg
-RFLAGS=-O3 -march=sandybridge
+RFLAGS=-O3 -funroll-loops -flto -fwhole-program -march=native
 DFLAGS=-g -O0 -march=sandybridge
 
 all: release
