@@ -5,9 +5,12 @@
 #include <string.h>
 #include <math.h>
 #include <stdio.h>
+#include <omp.h>
 #include "core/dump.h"
 #include "core/fft.h"
 #include "core/interp.h"
+
+#define BUFFSIZE 4 * 1024 * 1024 // 4MB 
 
 #define ALIGNETOCACHE 128
 
@@ -28,6 +31,9 @@
 
 #define log(fmt, ...) \
 		do { if (VERBOSE) fprintf(stderr, fmt, ##__VA_ARGS__); } while (0)
+
+char RWBUFFERX[BUFFSIZE];
+char RWBUFFERY[BUFFSIZE];
 
 size_t get_inv_stamps(double** stamps, size_t size);
 

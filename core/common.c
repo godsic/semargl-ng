@@ -1,6 +1,16 @@
 #include "core/common.h"
 
 
+const double PI2 = 2.0 * M_PI;
+const double PI4 = 4.0 * M_PI;
+const double PI6 = 6.0 * M_PI;
+const double PI8 = 8.0 * M_PI;
+const double A0 = 1.0;
+const double A1 = 1.93;
+const double A2 = 1.29;
+const double A3 = 0.388;
+const double A4 = 0.028;
+
 size_t get_inv_stamps(double** stamps, size_t size)
 {
     size_t i;
@@ -127,7 +137,7 @@ size_t spawnfilesr2r(size_t count, const char **filenames)
         strcat(filename, UVWEXT);
         strcat(filename, DUMPEXT);
 
-        log("%s\n", filename);
+        // log("%s\n", filename);
 
         f = fopen((const char *)filename, "w");
         if (f == NULL)
@@ -168,8 +178,8 @@ size_t spawnfilesr2c(size_t count, const char **filenames)
         strcat(filenamex, DUMPEXT);
         strcat(filenamey, DUMPEXT);
 
-        log("%s\n", filenamex);
-        log("%s\n", filenamey);
+        // log("%s\n", filenamex);
+        // log("%s\n", filenamey);
 
         fx = fopen((const char *)filenamex, "w");
         if (fx == NULL)
@@ -221,7 +231,7 @@ size_t spawnfilesc2c(size_t count, const char **filenamesX, const char **filenam
         strcat(filenamexx, DUMPEXT);
         strcat(filenameyy, DUMPEXT);
 
-        log("%s\t%s\n", filenamexx, filenameyy);
+        // log("%s\t%s\n", filenamexx, filenameyy);
 
         fx = fopen((const char *)filenamexx, "w");
         if (fx == NULL)
@@ -258,13 +268,13 @@ size_t loadspatdatar(size_t count, size_t bias, size_t offset, float **gbuffer, 
         k = i * offset;
         gbf_offset = &gbf[k];
 
-        log("%s\n", filenames[ii]);
+        // log("%s\n", filenames[ii]);
 
         f = fopen((const char *)filenames[ii], "rb");
         if (f == NULL)
             return EXIT_FAILURE;
 
-        setvbuf(f, NULL, _IOFBF, 0);
+        setvbuf(f, RWBUFFERX, _IONBF, BUFFSIZE);
 
         if (dloadchunkfloat(f, 0, offset, &gbf_offset))
             return EXIT_FAILURE;
@@ -284,13 +294,14 @@ size_t loaddatar(size_t count, size_t stride, size_t bias, size_t offset, float 
     size_t i, k, ii;
 
     for (i = 0; i < count; i++) {
-        log("%s\n", filenames[i]);
+        // log("%s\n", filenames[i]);
         f = fopen((const char *)filenames[i], "rb");
         if (f == NULL)
             return EXIT_FAILURE;
-        setvbuf(f, NULL, _IOFBF, 0);
+        setvbuf(f, RWBUFFERX, _IONBF, BUFFSIZE);
         if (dloadchunkfloat(f, bias, offset, &lbf))
             return EXIT_FAILURE;
+#pragma omp parallel for private(k, ii)
         for (k = 0; k < offset; k++) {
             ii = k * stride;
             gbf[ii + i] = lbf[k];
@@ -314,7 +325,7 @@ size_t loaddatac(size_t count, size_t stride, size_t bias, size_t size, size_t o
     double xx, yy;
 
     for (i = 0; i < count; i++) {
-        log("%s\t%s\n", filenamesX[i], filenamesY[i]);
+        // log("%s\t%s\n", filenamesX[i], filenamesY[i]);
 
         fx = fopen((const char *)filenamesX[i], "rb");
         if (fx == NULL)
@@ -323,8 +334,8 @@ size_t loaddatac(size_t count, size_t stride, size_t bias, size_t size, size_t o
         if (fy == NULL)
             return EXIT_FAILURE;
 
-        setvbuf(fx, NULL, _IOFBF, 0);
-        setvbuf(fy, NULL, _IOFBF, 0);
+        setvbuf(fx, RWBUFFERX, _IONBF, BUFFSIZE);
+        setvbuf(fy, RWBUFFERY, _IONBF, BUFFSIZE);
 
         if (dloadchunkfloat(fx, bias, size, &lbfx))
             return EXIT_FAILURE;
@@ -388,13 +399,13 @@ size_t savespatdatar(size_t count, size_t bias, size_t offset, float **gbuffer, 
         strcat(filename, UVWEXT);
         strcat(filename, DUMPEXT);
 
-        log("%s\n", filename);
+        // log("%s\n", filename);
 
         f = fopen((const char *)filename, "r+");
         if (f == NULL)
             return EXIT_FAILURE;
 
-        setvbuf(f, NULL, _IOFBF, 0);
+        setvbuf(f, RWBUFFERX, _IONBF, BUFFSIZE);
 
         if (dsavechunkfloat(f, 0, offset, gbf_offset))
             return EXIT_FAILURE;
@@ -429,13 +440,13 @@ size_t savedatar(size_t count, size_t stride, size_t bias, size_t offset, float 
         strcat(filename, UVWEXT);
         strcat(filename, DUMPEXT);
 
-        log("%s\n", filename);
+        // log("%s\n", filename);
 
         f = fopen((const char *)filename, "r+");
         if (f == NULL)
             return EXIT_FAILURE;
 
-        setvbuf(f, NULL, _IOFBF, 0);
+        setvbuf(f, RWBUFFERX, _IONBF, BUFFSIZE);
 
         for (k = 0; k < offset; k++) {
             ii = k * stride;
@@ -484,8 +495,8 @@ size_t savedatac(size_t count, size_t stride, size_t bias, size_t offset, fftwf_
         strcat(filenamex, DUMPEXT);
         strcat(filenamey, DUMPEXT);
 
-        log("%s\n", filenamex);
-        log("%s\n", filenamey);
+        // log("%s\n", filenamex);
+        // log("%s\n", filenamey);
 
         fx = fopen((const char *)filenamex, "r+");
         if (fx == NULL)
@@ -494,9 +505,9 @@ size_t savedatac(size_t count, size_t stride, size_t bias, size_t offset, fftwf_
         if (fy == NULL)
             return EXIT_FAILURE;
 
-        setvbuf(fx, NULL, _IOFBF, 0);
-        setvbuf(fy, NULL, _IOFBF, 0);
-
+        setvbuf(fx, RWBUFFERX, _IONBF, BUFFSIZE);
+        setvbuf(fy, RWBUFFERY, _IONBF, BUFFSIZE);
+#pragma omp parallel for private(ii, x, y, xx, yy)
         for (k = 0; k < offset; k++) {
             ii = k * stride;
 
@@ -554,13 +565,13 @@ size_t finalizefilesr2r(size_t count, dump *header, const char **filenames)
         strcat(filename, UVWEXT);
         strcat(filename, DUMPEXT);
 
-        log("%s\n", filename);
+        // log("%s\n", filename);
 
         f = fopen((const char *)filename, "r+b");
         if (f == NULL)
             return EXIT_FAILURE;
 
-        setvbuf(f, NULL, _IOFBF, 0);
+        setvbuf(f, RWBUFFERX, _IONBF, BUFFSIZE);
 
         if (dfinilize(f, header))
             return EXIT_FAILURE;
@@ -599,8 +610,8 @@ size_t finalizefilesr2c(size_t count, dump *header, const char **filenames)
         strcat(filenamex, DUMPEXT);
         strcat(filenamey, DUMPEXT);
 
-        log("%s\n", filenamex);
-        log("%s\n", filenamey);
+        // log("%s\n", filenamex);
+        // log("%s\n", filenamey);
 
         fx = fopen((const char *)filenamex, "r+b");
         if (fx == NULL)
@@ -608,8 +619,8 @@ size_t finalizefilesr2c(size_t count, dump *header, const char **filenames)
         fy = fopen((const char *)filenamey, "r+b");
         if (fy == NULL)
             return EXIT_FAILURE;
-        setvbuf(fx, NULL, _IOFBF, 0);
-        setvbuf(fy, NULL, _IOFBF, 0);
+        setvbuf(fx, RWBUFFERX, _IONBF, BUFFSIZE);
+        setvbuf(fy, RWBUFFERY, _IONBF, BUFFSIZE);
 
         if (dfinilize(fx, header))
             return EXIT_FAILURE;
@@ -651,13 +662,13 @@ size_t finalizefilesr2r_savestamps(size_t count, dump *header, const char **file
         strcat(filename, UVWEXT);
         strcat(filename, DUMPEXT);
 
-        log("%s\n", filename);
+        // log("%s\n", filename);
 
         f = fopen((const char *)filename, "r+b");
         if (f == NULL)
             return EXIT_FAILURE;
 
-        setvbuf(f, NULL, _IOFBF, 0);
+        setvbuf(f, RWBUFFERX, _IONBF, BUFFSIZE);
 
         if (dfinilize(f, header))
             return EXIT_FAILURE;
@@ -700,8 +711,8 @@ size_t finalizefilesr2c_savestamps(size_t count, dump *header, const char **file
         strcat(filenamex, DUMPEXT);
         strcat(filenamey, DUMPEXT);
 
-        log("%s\n", filenamex);
-        log("%s\n", filenamey);
+        // log("%s\n", filenamex);
+        // log("%s\n", filenamey);
 
         fx = fopen((const char *)filenamex, "r+b");
         if (fx == NULL)
@@ -709,8 +720,8 @@ size_t finalizefilesr2c_savestamps(size_t count, dump *header, const char **file
         fy = fopen((const char *)filenamey, "r+b");
         if (fy == NULL)
             return EXIT_FAILURE;
-        setvbuf(fx, NULL, _IOFBF, 0);
-        setvbuf(fy, NULL, _IOFBF, 0);
+        setvbuf(fx, RWBUFFERX, _IONBF, BUFFSIZE);
+        setvbuf(fy, RWBUFFERY, _IONBF, BUFFSIZE);
 
         if (dfinilize(fx, header))
             return EXIT_FAILURE;
@@ -771,11 +782,15 @@ void applywindow(float **in, size_t size, size_t offset, size_t n)
     double arg;
     double v;
     log("size: %ld\toffset: %ld\tn: %ld\n", size, offset, n);
+    double isize = 1.0 / (double)(size - 1);
+#pragma omp parallel for private(bias, arg, v, i)
     for (k = 0; k < n; k++) {
         bias = k * offset;
         for (i = 0; i < size; i++) {
-            arg = 2.0 * (double)i / (double)(size - 1);
-            v = sinc(arg - 1.0);
+            //arg = 2.0 * (double)i / (double)(size - 1);
+            //v = sinc(arg - 1.0);
+            arg = (double)i * isize;
+            v = flat_top(arg);
             (*in)[bias + i] = (float)((double)(*in)[bias + i] * v);
         }
 
@@ -802,14 +817,5 @@ inline double sinc(double x)
 
 inline double flat_top(double x)
 {
-    const double PI2 = 2.0 * M_PI;
-    const double PI4 = 4.0 * M_PI;
-    const double PI6 = 6.0 * M_PI;
-    const double PI8 = 8.0 * M_PI;
-    const double A0 = 1.0;
-    const double A1 = 1.93;
-    const double A2 = 1.29;
-    const double A3 = 0.388;
-    const double A4 = 0.028;
     return A0 - A1*cos(PI2*x) + A2*cos(PI4*x) - A3*cos(PI6*x) + A4*cos(PI8*x);
 }
