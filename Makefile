@@ -8,16 +8,16 @@ DFLAGS= -g -Og
 all: release
 
 release:
-        $(foreach       EXECUTABLE,$(EXECUTABLES),$(CC) $(CFLAGS) $(RFLAGS) $(EXECUTABLE).c core/*.c -o $(EXECUTABLE) $(LDFLAGS) &&) true
+	$(foreach       EXECUTABLE,$(EXECUTABLES),$(CC) $(CFLAGS) $(RFLAGS) $(EXECUTABLE).c core/*.c -o $(EXECUTABLE) $(LDFLAGS) &&) true
 
 valgrind:
-        $(foreach       EXECUTABLE,$(EXECUTABLES),$(CC) $(CFLAGS) $(DFLAGS) $(EXECUTABLE).c core/*.c -o $(EXECUTABLE) $(LDFLAGS) &&) true
+	$(foreach       EXECUTABLE,$(EXECUTABLES),$(CC) $(CFLAGS) $(DFLAGS) $(EXECUTABLE).c core/*.c -o $(EXECUTABLE) $(LDFLAGS) &&) true
 
 sanitizer:
-        $(foreach       EXECUTABLE,$(EXECUTABLES),$(CC) $(CFLAGS) $(DFLAGS) -fsanitize=address -fno-omit-frame-pointer $(EXECUTABLE).c core/*.c -o $(EXECUTABLE) $(LDFLAGS) &&) true
+	$(foreach       EXECUTABLE,$(EXECUTABLES),$(CC) $(CFLAGS) $(DFLAGS) -fsanitize=address -fno-omit-frame-pointer $(EXECUTABLE).c core/*.c -o $(EXECUTABLE) $(LDFLAGS) &&) true
 
 clean:
-        $(foreach EXECUTABLE,$(EXECUTABLES),rm -rf $(EXECUTABLE) &&) true
+	$(foreach EXECUTABLE,$(EXECUTABLES),rm -rf $(EXECUTABLE) &&) true
 
 .PHONY: all clean
 
