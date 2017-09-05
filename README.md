@@ -3,9 +3,16 @@ a set of CLI tools to perform spectral analysis of micromagnetics-specific data
 ___
 
 ## how to build:
-assuming one has gcc, fftw, fftw-devel, fftw-libs-single installed:
+Dependencies:
+* gcc
+* gsl
+* openmp
+* fftw
+* fftw-devel
+* fftw-libs-single
 
-`cd semargl-ng; make all`
+Install:
+`cd semargl-ng; make all; sudo make install`
 ___
 
 ## usage:
