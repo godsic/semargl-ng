@@ -7,6 +7,7 @@ Dependencies:
 * gcc
 * gsl
 * openmp
+* openblas
 * fftw
 * fftw-devel
 * fftw-libs-single
